@@ -1,10 +1,7 @@
 # dotfiles
 
 Hyprland desktop for an **ASUS ROG Zephyrus G16 (GU605)** running Arch Linux.
-
 Violet-on-glass theme across the bar, launcher, notifications and lock screen.
-Everything here is live-linked — `~/.config/hypr` and friends are symlinks into
-this repo, so edits land in git immediately.
 
 ```
   Compositor   Hyprland 0.56 (Lua config)
@@ -13,6 +10,26 @@ this repo, so edits land in git immediately.
   Wallpaper    Hyprpaper       Idle       Hypridle
   Terminal     Kitty           Shell      Bash
 ```
+
+---
+
+## Gallery
+
+|                Desktop                 |                 Fastfetch                  |                 Launcher                 |
+| :------------------------------------: | :----------------------------------------: | :--------------------------------------: |
+| ![Desktop](screenshots/desktop.png)    | ![Fastfetch](screenshots/fastfetch.png)    | ![Launcher](screenshots/launcher.png)    |
+
+|              Lock screen               |                    Yazi                    |                Terminals                 |
+| :------------------------------------: | :----------------------------------------: | :--------------------------------------: |
+| ![Lock screen](screenshots/lockscreen.png) | ![Yazi](screenshots/yazi.png)          | ![Terminals](screenshots/terminals.png)  |
+
+### Bar
+
+Launcher and running apps on the left, workspace dots in the centre, system
+status on the right — GPU, CPU, brightness, volume, network, Bluetooth,
+battery, ROG control, tray, clock and power.
+
+![Waybar](screenshots/bar.png)
 
 ---
 
@@ -87,7 +104,7 @@ it is safe to re-run.
 
 | Keys | Action |
 | --- | --- |
-| `XF86MonBrightness` `↑` `↓` | Brightness — gamma, see notes |
+| `XF86MonBrightness` `↑` `↓` | Brightness |
 | `XF86Audio` `Raise` `Lower` `Mute` | Volume |
 | `XF86Audio` `Play` `Next` `Prev` | Playback |
 
@@ -117,7 +134,7 @@ it is safe to re-run.
 | `grim` + `slurp` | Screenshot capture and region selection |
 | `wl-clipboard` | `wl-copy` / `wl-paste` |
 | `cliphist` | Clipboard history store |
-| `wl-gammarelay-rs` | **Brightness** via gamma ramps — see notes |
+| `wl-gammarelay-rs` | Brightness via gamma ramps — the panel is OLED |
 | `playerctl` | Media key handling |
 | `pavucontrol` | Audio mixer |
 | `blueman` + `bluez-utils` | Bluetooth |
@@ -132,7 +149,7 @@ it is safe to re-run.
 | Package | Purpose |
 | --- | --- |
 | `nvidia-open` + `nvidia-utils` | RTX 4070 driver — versions must match |
-| `intel-media-driver` | **Video decode** on the Intel iGPU — see notes |
+| `intel-media-driver` | Video decode on the Intel iGPU |
 | `asusctl` | Fan curves, battery charge limit, Aura |
 | `rog-control-center` | ASUS GUI control panel |
 
@@ -142,85 +159,6 @@ it is safe to re-run.
 | --- | --- |
 | `ttf-jetbrains-mono-nerd` | UI and terminal font, supplies all glyph icons |
 | `ttf-nerd-fonts-symbols` | Icon fallback |
-
----
-
-## Notes
-
-Things about this machine that cost real time to work out. Read before editing.
-
-### The panel is OLED — there is no backlight
-
-Every backlight method is a silent no-op: `brightnessctl`, `acpi_backlight=`,
-`i915.enable_dpcd_backlight`, `nvidia_wmi_ec_backlight`, `asusctl backlight`.
-They report success and change nothing.
-
-Brightness is **`wl-gammarelay-rs`**, which adjusts the gamma ramp over D-Bus.
-`scripts/brightness.sh` wraps it because the raw `UpdateBrightness` call does
-not clamp — holding the key drives past 1.0 or below 0.0 and blacks the screen.
-
-> The D-Bus **service** is `rs.wl-gammarelay` (hyphen), the **interface** is
-> `rs.wl.gammarelay` (all periods). They are deliberately different.
-
-### Hyprland uses the Lua config, not `.conf`
-
-Almost every guide online is for the legacy format and will not work.
-
-| Legacy | Here |
-| --- | --- |
-| `bind = SUPER, R, exec, rofi` | `hl.bind("SUPER + R", hl.dsp.exec_cmd("rofi"))` |
-| `hyprctl dispatch exit` | `hyprctl dispatch 'hl.dsp.exit()'` |
-| `hyprctl dispatch dpms off` | `hyprctl dispatch 'hl.dsp.dpms("off")'` |
-
-`hl.dsp.dpms()` does **not** validate its argument — anything that is not
-`"on"` turns the displays off.
-
-Verify any change with `Hyprland --verify-config` before reloading.
-
-### hyprpaper 0.8.x changed its config format
-
-`preload =` / `wallpaper = ,path` is gone. It parses without error and
-silently draws nothing, logging only `Monitor eDP-1 has no target`. The
-current format is a `wallpaper { }` block, and paths must be **absolute** —
-`~` is not expanded.
-
-### swaync themes through `:root` variables
-
-Short selectors like `.notification { background: … }` are overridden by the
-shipped stylesheet's longer chains and do nothing. Override the `:root` custom
-properties instead, or match the full chain.
-
-### hyprlock hides the password box by default
-
-`fade_on_empty` defaults to `true`, so an empty field renders as fully
-invisible — even at full opacity. Used deliberately here for the macOS-style
-reveal-on-typing. Also `$DESC` reads the GECOS field, which is empty on a
-typical Arch account; use `$USER`.
-
-### Waybar CSS is order-sensitive
-
-`.active`, `:hover`, `.occupied` and `.visible` all have identical specificity,
-so source order alone decides the winner. Required order in `style.css` is
-`occupied → active → hover → urgent`. Appending a new state rule at the bottom
-will silently override the focused workspace.
-
-Workspace dots also need `font-size: 0` on `#workspaces button label` — the
-label reserves a full line box even when empty, which is what makes dots render
-as stretched capsules.
-
-### Video decode must stay on the iGPU
-
-Hyprland advertises the Intel render node for dmabuf. Decoding on the dGPU
-produces `eglCreateImage failed … EGL_BAD_MATCH` on every H.264 site, so
-`LIBVA_DRIVER_NAME=iHD` is set in `hyprland.lua`.
-
-Brave reads `~/.config/brave-flags.conf` — **not** `chromium-flags.conf`.
-
-### Screen sharing needs an explicit backend
-
-`gnome.portal` also claims `ScreenCast`, and GNOME is installed as the fallback
-session. Without `xdg-desktop-portal/hyprland-portals.conf` pinning the
-hyprland backend, screen sharing silently routes to GNOME's and fails.
 
 ---
 
@@ -235,5 +173,6 @@ hyprland backend, screen sharing silently routes to GNOME's and fails.
 .config/fastfetch/     greeter + spider ASCII logo
 .config/xdg-desktop-portal/
 Pictures/Wallpapers/   wallpapers, avatar
+screenshots/           gallery images
 .bashrc                greeter guard, yazi `y` wrapper
 ```
