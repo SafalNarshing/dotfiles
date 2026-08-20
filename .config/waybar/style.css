@@ -1,0 +1,282 @@
+/* Waybar — monochrome, compact.
+ *
+ * Everything on the right is one neutral grey. Colour is reserved for states
+ * that actually need attention (low battery, thermal critical, disconnected),
+ * so when something goes coloured it means something.
+ *
+ * GTK CSS, not web CSS: no `gap`, no custom properties, no flexbox.
+ */
+
+/* Kept translucent on purpose: a layer_rule in hyprland.lua blurs the
+ * wallpaper behind the bar, so these alphas are what let the blur show
+ * through. Pushing them toward 1.0 turns the bar back into a black slab. */
+@define-color bg       rgba(40, 36, 54, 0.55);
+@define-color bg-pill  rgba(78, 71, 100, 0.38);
+@define-color bg-hover rgba(120, 106, 156, 0.70);
+@define-color fg       #c8ccd6;   /* the one neutral used almost everywhere */
+@define-color fg-dim   #7a7f8c;
+@define-color accent   #cba6f7;   /* workspaces + launcher only */
+@define-color warn     #e0c68a;
+@define-color crit     #e08c9a;
+
+* {
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+    font-size: 12px;
+    font-weight: 500;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    background: transparent;
+    color: @fg;
+}
+
+/* The bar body: one rounded slab, not a full-width strip. */
+/* No horizontal padding: the Apps button is flush into the left corner, so any
+ * padding here would hold it off the edge. Right-hand inset is restored on
+ * #custom-power instead. */
+window#waybar > box {
+    background: @bg;
+    border-radius: 11px;
+    border: 1px solid rgba(203, 166, 247, 0.22);
+    padding: 0;
+}
+
+tooltip {
+    background: rgba(18, 17, 24, 0.97);
+    border: 1px solid rgba(203, 166, 247, 0.35);
+    border-radius: 9px;
+}
+
+tooltip label {
+    color: @fg;
+    padding: 4px;
+}
+
+/* ------------------------------------------------------------------ LEFT */
+
+#taskbar {
+    margin: 4px 0;
+}
+
+#taskbar button {
+    padding: 0 5px;
+    margin: 0 1px;
+    border-radius: 7px;
+    background: transparent;
+    transition: background 150ms ease;
+}
+
+#taskbar button:hover {
+    background: @bg-hover;
+}
+
+/* Focused app: a translucent wash only. The violet underline that used to sit
+ * here (inset box-shadow) has been removed, so this fill is the sole focus
+ * cue and is pitched strong enough to read at a glance. */
+#taskbar button.active {
+    background: rgba(207, 212, 224, 0.30);
+    box-shadow: none;
+}
+
+/* ---------------------------------------------------------------- CENTRE */
+
+/* Dots. The active one stretches into a pill — min-width is what animates,
+ * so both states need it set explicitly for the transition to interpolate. */
+#workspaces {
+    margin: 0;
+    padding: 0 4px;
+}
+
+/* Getting these to be actual circles takes three things together:
+ *
+ * 1. font-size: 0 — the format string is empty, but GTK still reserves a full
+ *    line box for the label. At the inherited 12px that is ~19px of intrinsic
+ *    height, which no min-height can shrink, so the dots render as tall
+ *    capsules. Zeroing the font is what lets min-height govern.
+ * 2. margin — a GTK button otherwise expands to fill the bar's height.
+ * 3. border-radius: 9999px, not 50% — GTK clamps it to half the shorter side,
+ *    so one value gives a true circle while square and a stadium with
+ *    semicircular ends once the active dot widens. 50% resolves per-axis and
+ *    would yield an ellipse instead.
+ *
+ * Net height here is 10px, so the bar's 36px is set by the clock, not by this. */
+#workspaces button {
+    min-width: 10px;
+    min-height: 10px;
+    font-size: 0;
+    padding: 0;
+    margin: 12px 5px;
+    border-radius: 9999px;
+    background: @fg-dim;
+    transition: min-width 200ms ease, background 200ms ease;
+}
+
+/* The button wraps a GtkLabel that does not inherit the button's font-size.
+ * Even with an empty format string that label reserves a full 12px line box
+ * (~19px), which is the real source of the stretched height — so it has to be
+ * zeroed here, on the label itself, not just on the button. */
+#workspaces button label {
+    font-size: 0;
+    min-height: 0;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* ORDER MATTERS BELOW THIS LINE.
+ *
+ * These selectors all have identical specificity (one id + one class/pseudo
+ * + one element), so the cascade is decided purely by source order — the last
+ * matching rule wins. The focused workspace is simultaneously .active,
+ * .visible and .occupied, so whichever of those is written last wins.
+ * :hover must therefore come AFTER .active, or hovering the focused pill
+ * would do nothing. Order: occupied -> active -> hover -> urgent. */
+
+/* Has windows but is not focused: brighter than an empty dot, still a dot. */
+#workspaces button.visible,
+#workspaces button.occupied {
+    background: rgba(200, 204, 214, 0.55);
+}
+
+/* Focused workspace: a neutral grey pill. */
+#workspaces button.active {
+    min-width: 30px;
+    border-radius: 9999px;
+    background: @fg;
+}
+
+/* Violet is reserved for hover, and applies to the focused pill too since
+ * this rule follows .active. min-width is in the base rule's transition list,
+ * so GTK interpolates the 10px -> 30px growth rather than snapping.
+ * box-shadow is cleared because GTK's own button hover draws one. */
+#workspaces button:hover {
+    min-width: 30px;
+    background: @accent;
+    box-shadow: none;
+}
+
+#workspaces button.urgent {
+    background: @crit;
+}
+
+/* ----------------------------------------------------------------- RIGHT */
+
+/* One shared pill treatment. Tight horizontal padding is most of what makes
+ * the bar narrower than before. */
+#custom-gpu,
+#custom-cpu,
+#custom-brightness,
+#pulseaudio,
+#network,
+#bluetooth,
+#battery,
+#custom-asus,
+#tray,
+#clock,
+#custom-power,
+#custom-apps {
+    background: @bg-pill;
+    color: @fg;
+    padding: 0 8px;
+    margin: 4px 2px;
+    border-radius: 8px;
+}
+
+/* Icon-only pills are square-ish; tighten them so they don't read as gaps. */
+#custom-brightness,
+#pulseaudio,
+#network,
+#bluetooth {
+    padding: 0 9px;
+}
+
+/* Icon-only modules read better a shade larger than the numeric ones. */
+#custom-brightness,
+#pulseaudio,
+#network,
+#bluetooth,
+#custom-asus {
+    font-size: 13px;
+}
+
+/* Two-line clock. The stacked lines set the bar's minimum height, so these
+ * sizes are deliberately small — bumping them forces the whole bar taller. */
+#clock {
+    color: #dfe3ec;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 0 9px;
+}
+
+/* Restores the right-hand inset lost when the bar's own padding was zeroed. */
+#custom-power {
+    color: @fg;
+    padding: 0 10px;
+    margin-right: 6px;
+}
+
+#custom-power:hover {
+    background: @crit;
+    color: #14131a;
+}
+
+/* App launcher, far left. The one solid-white element on the bar — it is the
+ * primary action, so it reads as a button rather than a status readout. */
+#custom-apps {
+    background: #ffffff;
+    color: #1a1722;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 0 16px;
+    /* Zero margin on the top, bottom and left seats it into the bar's corner;
+       the 12px right margin is the gap before the running-app icons. */
+    margin: 0 12px 0 0;
+    /* Left corners follow the bar's own 11px radius (less its 1px border) so
+       the white meets the edge cleanly; right corners stay capsule-round. */
+    border-radius: 10px 14px 14px 10px;
+}
+
+#custom-apps:hover {
+    background: @accent;
+    color: #14131a;
+}
+
+/* -------------------------------------------------- state colours only */
+
+#custom-cpu.warm,
+#custom-gpu.warm       { color: @warn; }
+
+#custom-cpu.critical,
+#custom-gpu.critical   { color: @crit; }
+
+#custom-gpu.off,
+#custom-brightness.off { color: @fg-dim; }
+
+#pulseaudio.muted      { color: @fg-dim; }
+
+#bluetooth.disabled,
+#bluetooth.off         { color: @fg-dim; }
+
+#network.disconnected  { color: @fg-dim; }
+
+#battery.warning       { color: @warn; }
+#battery.critical      { color: @crit; }
+
+#tray > .passive         { -gtk-icon-effect: dim; }
+#tray > .needs-attention { -gtk-icon-effect: highlight; }
+
+/* Hover feedback for the interactive pills. */
+#custom-cpu:hover,
+#custom-gpu:hover,
+#custom-brightness:hover,
+#pulseaudio:hover,
+#network:hover,
+#bluetooth:hover,
+#battery:hover,
+#custom-asus:hover,
+#clock:hover {
+    background: @bg-hover;
+}

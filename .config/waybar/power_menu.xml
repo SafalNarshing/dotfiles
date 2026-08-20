@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Waybar builds this with GtkBuilder and pops it up via gtk_menu_popup_at_pointer,
+     so it must be a GTK3 *GtkMenu widget tree* — NOT a <menu> GMenu model.
+     A GMenu parses fine and is even found by name, but yields one
+     "invalid (NULL) pointer instance" CRITICAL per entry and no working menu.
+
+     Each GtkMenuItem id must match a key in "menu-actions" in config.jsonc.
+     Items also need visible=True or they simply will not render. -->
+<interface>
+  <object class="GtkMenu" id="menu">
+    <property name="visible">True</property>
+
+    <child>
+      <object class="GtkMenuItem" id="lock">
+        <property name="visible">True</property>
+        <property name="label">Lock</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkMenuItem" id="suspend">
+        <property name="visible">True</property>
+        <property name="label">Suspend</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkMenuItem" id="logout">
+        <property name="visible">True</property>
+        <property name="label">Log out</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkSeparatorMenuItem" id="sep">
+        <property name="visible">True</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkMenuItem" id="reboot">
+        <property name="visible">True</property>
+        <property name="label">Restart</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkMenuItem" id="shutdown">
+        <property name="visible">True</property>
+        <property name="label">Shut down</property>
+      </object>
+    </child>
+
+  </object>
+</interface>

@@ -1,0 +1,59 @@
+{
+    "$schema": "/etc/xdg/swaync/configSchema.json",
+    "positionX": "right",
+    "positionY": "top",
+    "layer": "overlay",
+    "layer-shell": true,
+    "control-center-layer": "top",
+    "cssPriority": "user",
+    "control-center-width": 420,
+    "control-center-height": 640,
+    "control-center-margin-top": 0,
+    "control-center-margin-bottom": 8,
+    "control-center-margin-right": 8,
+    "control-center-margin-left": 8,
+    "control-center-positionX": "right",
+    "notification-window-width": 340,
+    "notification-icon-size": 24,
+    "notification-body-image-height": 80,
+    "notification-body-image-width": 140,
+    "notification-visibility": {},
+    "timeout": 6,
+    "timeout-low": 4,
+    "timeout-critical": 0,
+    "fit-to-screen": false,
+    "keyboard-shortcuts": true,
+    "image-visibility": "when-available",
+    "transition-time": 200,
+    "hide-on-clear": true,
+    "hide-on-action": true,
+    "script-fail-notify": true,
+    "widgets": [
+        "title",
+        "dnd",
+        "notifications",
+        "mpris",
+        "volume"
+    ],
+    "widget-config": {
+        "title": {
+            "text": "Notifications",
+            "clear-all-button": true,
+            "button-text": "Clear all"
+        },
+        "dnd": {
+            "text": "Do not disturb"
+        },
+        "mpris": {
+            "image-size": 88,
+            "image-radius": 10
+        },
+        "volume": {
+            "label": "󰕾",
+            "show-per-app": true
+        },
+        "notifications": {
+            "vexpand": true
+        }
+    }
+}

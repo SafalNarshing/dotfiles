@@ -1,0 +1,122 @@
+/* Launcher theme — matches the waybar / kitty violet-on-glass look.
+ *
+ * The background alphas are deliberately low: a layer_rule in hyprland.lua
+ * blurs the wallpaper behind namespace "rofi", so this reads as frosted glass.
+ * Without that rule it would just look washed out.
+ */
+
+* {
+    bg:          rgba(24, 21, 33, 72%);
+    bg-selected: rgba(203, 166, 247, 22%);
+    bg-input:    rgba(120, 106, 156, 18%);
+    fg:          #dfe3ec;
+    fg-dim:      #8b90a0;
+    accent:      #cba6f7;
+    border-col:  rgba(203, 166, 247, 28%);
+
+    font:             "JetBrainsMono Nerd Font 11";
+    background-color: transparent;
+    text-color:       @fg;
+    margin:           0;
+    padding:          0;
+    spacing:          0;
+}
+
+window {
+    transparency:     "real";
+    location:         center;
+    anchor:           center;
+    /* Narrower than the two-column version was: a single column of names
+       stretched across 760px leaves the text stranded at the left edge. */
+    width:            560px;
+    border:           1px;
+    border-color:     @border-col;
+    border-radius:    16px;
+    background-color: @bg;
+    padding:          18px;
+    children:         [ mainbox ];
+}
+
+mainbox {
+    spacing:  14px;
+    children: [ inputbar, message, listview ];
+}
+
+/* ------------------------------------------------------------- search bar */
+
+inputbar {
+    background-color: @bg-input;
+    border-radius:    11px;
+    padding:          11px 14px;
+    spacing:          10px;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    text-color:       @accent;
+    vertical-align:   0.5;
+}
+
+entry {
+    placeholder:            "Search apps…";
+    placeholder-color:      @fg-dim;
+    vertical-align:         0.5;
+    cursor:                 text;
+}
+
+/* ----------------------------------------------------------------- list */
+
+/* Single column. `flow` is omitted deliberately — it only has meaning with
+ * more than one column. */
+listview {
+    columns:      1;
+    lines:        10;
+    fixed-height: false;
+    cycle:        true;
+    dynamic:      true;
+    scrollbar:    false;
+    spacing:      3px;
+}
+
+/* Text-only rows, so they can be tighter than icon rows were. */
+element {
+    padding:       7px 12px;
+    spacing:       0;
+    border-radius: 9px;
+    cursor:        pointer;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+element selected.normal {
+    background-color: @bg-selected;
+    text-color:       #ffffff;
+}
+
+/* Icons are disabled in config.rasi; this keeps the slot from reserving
+ * width should show-icons ever be turned back on. */
+element-icon {
+    size:   0;
+    cursor: inherit;
+}
+
+element-text {
+    vertical-align: 0.5;
+    cursor:         inherit;
+    text-color:     inherit;
+}
+
+/* Shown when a mode has no matches. */
+message {
+    background-color: @bg-input;
+    border-radius:    10px;
+    padding:          9px 12px;
+}
+
+textbox {
+    text-color: @fg-dim;
+}

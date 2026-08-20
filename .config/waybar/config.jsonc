@@ -1,0 +1,218 @@
+// -*- mode: jsonc -*-
+// Waybar — ASUS Zephyrus G16 (GU605) / Hyprland
+//
+//   left   : launcher + running apps
+//   centre : workspace dots (active one is a pill)
+//   right  : compact status — icons carry the value, numbers only where a
+//            number is genuinely useful. Detail lives in tooltips.
+{
+    "layer": "top",
+    "position": "top",
+    "height": 36,
+    "spacing": 0,
+    "margin-top": 5,
+    "margin-left": 8,
+    "margin-right": 8,
+
+    "modules-left": [
+        "custom/apps",
+        "wlr/taskbar"
+    ],
+
+    "modules-center": [
+        "hyprland/workspaces"
+    ],
+
+    "modules-right": [
+        "custom/gpu",
+        "custom/cpu",
+        "custom/brightness",
+        "pulseaudio",
+        "network",
+        "bluetooth",
+        "battery",
+        "custom/asus",
+        "tray",
+        "clock",
+        "custom/power"
+    ],
+
+    // ---------------------------------------------------------------- LEFT
+
+    "wlr/taskbar": {
+        "format": "{icon}",
+        "icon-size": 17,
+        "tooltip-format": "{title}",
+        "on-click": "activate",
+        "on-click-middle": "close",
+        "ignore-list": ["rofi"]
+    },
+
+    // -------------------------------------------------------------- CENTRE
+
+    // Shape comes entirely from style.css: every workspace is a small dot,
+    // the focused one widens into a rounded pill. Hence the empty format.
+    // persistent-workspaces sets a FLOOR, not a fixed count: dots 1-5 are always
+    // drawn, and a 6th appears if you ever put a window on workspace 6.
+    //
+    // Without this you see only one dot, because Hyprland destroys a workspace
+    // as soon as it is both empty and unfocused. Switching away from an empty
+    // workspace deletes it, so a purely dynamic bar can never show a second dot
+    // until each workspace is actually holding a window.
+    "hyprland/workspaces": {
+        "format": "",
+        "on-click": "activate",
+        "on-scroll-up": "hyprctl dispatch workspace e+1",
+        "on-scroll-down": "hyprctl dispatch workspace e-1",
+        "all-outputs": true,
+        "sort-by-number": true,
+        "persistent-workspaces": {
+            "*": 5
+        }
+    },
+
+    // --------------------------------------------------- RIGHT: GPU / CPU
+
+    // Two separate boxes, GPU to the left of CPU. Each shows only a
+    // percentage; temperature, VRAM and memory are in the tooltips.
+    "custom/gpu": {
+        "exec": "$HOME/.config/waybar/scripts/gpu.sh",
+        "return-type": "json",
+        "format": "󰢮 {}",
+        "interval": 5
+    },
+
+    "custom/cpu": {
+        "exec": "$HOME/.config/waybar/scripts/cpu.sh",
+        "return-type": "json",
+        "format": "󰻠 {}",
+        "interval": 3,
+        // btop is not installed yet; fall back to top so the click still works.
+        "on-click": "sh -c 'command -v btop >/dev/null && kitty -e btop || kitty -e top'"
+    },
+
+    // ------------------------------------------- RIGHT: brightness + sound
+
+    // Both are icon-only and sit in separate pills: the glyph steps through
+    // format-icons according to the level, so there is no number taking width.
+
+    // Gamma-based, not backlight — the OLED panel has no backlight to control.
+    "custom/brightness": {
+        "exec": "$HOME/.config/waybar/scripts/brightness.sh",
+        "return-type": "json",
+        "format": "{icon}",
+        "format-icons": ["󰃞", "󰃟", "󰃠"],
+        "interval": 2,
+        "on-scroll-up": "$HOME/.config/waybar/scripts/brightness.sh up",
+        "on-scroll-down": "$HOME/.config/waybar/scripts/brightness.sh down",
+        "on-click": "$HOME/.config/waybar/scripts/brightness.sh reset"
+    },
+
+    "pulseaudio": {
+        "format": "{icon}",
+        "format-muted": "󰝟",
+        "format-icons": {
+            "headphone": "󰋋",
+            "headset": "󰋎",
+            "default": ["󰕿", "󰖀", "󰕾"]
+        },
+        "scroll-step": 5,
+        "on-click": "pavucontrol",
+        "tooltip-format": "{desc}\nVolume {volume}%"
+    },
+
+    // ------------------------------------------- RIGHT: wifi and bluetooth
+    // Separate pills so each highlights independently on hover/click.
+
+    "network": {
+        "format-wifi": "{icon} <small>({signalStrength}%)</small>",
+        "format-ethernet": "󰈀",
+        "format-linked": "󰈀",
+        "format-disconnected": "󰖪",
+        "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
+        "tooltip-format-wifi": "{essid}\n{ipaddr}/{cidr}\n{signalStrength}% signal",
+        "tooltip-format-ethernet": "{ifname}\n{ipaddr}/{cidr}",
+        "tooltip-format-disconnected": "Disconnected",
+        "on-click": "nm-connection-editor"
+    },
+
+    "bluetooth": {
+        "format": "󰂯",
+        "format-disabled": "󰂲",
+        "format-off": "󰂲",
+        "format-connected": "󰂱",
+        "tooltip-format": "{controller_alias}\n{status}",
+        "tooltip-format-connected": "{device_enumerate}",
+        "on-click": "blueman-manager"
+    },
+
+    // ---------------------------------------------------- RIGHT: the rest
+
+    "battery": {
+        "bat": "BAT1",
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} <small>{capacity}%</small>",
+        "format-charging": "󰂄 <small>{capacity}%</small>",
+        "format-plugged": "󰚥 <small>{capacity}%</small>",
+        "format-icons": ["󰁺", "󰁽", "󰁿", "󰂁", "󰁹"],
+        // Charge limit is capped at 80% by asusctl, so "full" arrives early.
+        "tooltip-format": "{capacity}% — {time}\nCharge limit: 80% (asusctl)"
+    },
+
+    "custom/asus": {
+        "format": "󰇄",
+        "tooltip": "ROG Control Center",
+        "on-click": "rog-control-center"
+    },
+
+    "tray": {
+        "icon-size": 15,
+        "spacing": 8
+    },
+
+    // Two lines: time above, date beneath in a smaller face. Stacking these
+    // costs vertical space (which is free here) instead of horizontal space.
+    // The literal text between the strftime tokens passes through untouched,
+    // which is what lets the pango span live inside a single format spec.
+    // Clicking the clock opens the swaync notification panel; the calendar
+    // stays on hover as the tooltip.
+    "clock": {
+        "format": "{:%H:%M\n<small>%a %d %b</small>}",
+        "on-click": "swaync-client -t -sw",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "mode": "month",
+            "on-scroll": 1,
+            "format": {
+                "today": "<span color='#ffffff'><b>{}</b></span>"
+            }
+        },
+        "actions": {
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
+    },
+
+    // App launcher, top-right corner. Same toggle command as the SUPER
+    // release-bind in hyprland.lua, so clicking while rofi is open closes it
+    // instead of stacking a second instance.
+    "custom/apps": {
+        "format": "Apps",
+        "tooltip": false,
+        // -x matches the exact process name; a bare "pkill rofi" also hits
+        // power-profiles-daemon ("p-rofi-les").
+        "on-click": "sh -c 'pkill -x rofi || rofi -show drun'"
+    },
+
+    // Was a GTK popup menu (power_menu.xml), which inherits the system GTK
+    // theme and cannot be styled from waybar's stylesheet. Now a rofi card so
+    // it matches the launcher. power_menu.xml is kept but no longer used.
+    "custom/power": {
+        "format": "⏻",
+        "tooltip": false,
+        "on-click": "$HOME/.config/rofi/powermenu.sh"
+    }
+}

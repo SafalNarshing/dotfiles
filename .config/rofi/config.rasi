@@ -1,0 +1,21 @@
+/* rofi — app launcher
+ * Behaviour lives here; all appearance is in launcher.rasi.
+ */
+configuration {
+    modi:                "drun,run,window";
+    show-icons:          false;
+    terminal:            "kitty";
+    drun-display-format: "{name}";
+    display-drun:        "Apps";
+    display-run:         "Run";
+    display-window:      "Windows";
+    /* Rank frequently launched apps higher over time. */
+    sorting-method:      "fzf";
+    matching:            "fuzzy";
+    drun-match-fields:   "name,generic,exec,categories,keywords";
+    hover-select:        true;
+    me-select-entry:     "";
+    me-accept-entry:     "MousePrimary";
+}
+
+@theme "launcher"

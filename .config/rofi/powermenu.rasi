@@ -1,0 +1,88 @@
+/* Power menu — same glass palette as launcher.rasi, but a compact centred
+ * card with one row of large icon buttons.
+ *
+ * Blurred behind by the ^rofi$ layer_rule in hyprland.lua.
+ */
+
+* {
+    bg:          rgba(24, 21, 33, 78%);
+    bg-selected: rgba(203, 166, 247, 26%);
+    bg-danger:   rgba(224, 140, 154, 30%);
+    fg:          #dfe3ec;
+    fg-dim:      #8b90a0;
+    accent:      #cba6f7;
+    border-col:  rgba(203, 166, 247, 30%);
+
+    font:             "JetBrainsMono Nerd Font 11";
+    background-color: transparent;
+    text-color:       @fg;
+    margin:           0;
+    padding:          0;
+    spacing:          0;
+}
+
+window {
+    transparency:     "real";
+    location:         center;
+    anchor:           center;
+    width:            330px;
+    border:           1px;
+    border-color:     @border-col;
+    border-radius:    18px;
+    background-color: @bg;
+    padding:          22px;
+    children:         [ mainbox ];
+}
+
+mainbox {
+    spacing:  18px;
+    children: [ inputbar, listview ];
+}
+
+/* Acts as a title bar rather than a search field. */
+inputbar {
+    children: [ prompt ];
+}
+
+prompt {
+    text-color:     @fg-dim;
+    font:           "JetBrainsMono Nerd Font 10";
+    horizontal-align: 0.5;
+}
+
+/* One action per row, so each label is fully readable. */
+listview {
+    columns:   1;
+    lines:     5;
+    scrollbar: false;
+    spacing:   7px;
+}
+
+element {
+    padding:          13px 18px;
+    border-radius:    11px;
+    background-color: rgba(120, 106, 156, 16%);
+    cursor:           pointer;
+    children:         [ element-text ];
+}
+
+/* Font must be large enough for the glyph's line box, or the icon is clipped
+   at the top and bottom. Left-aligned so the labels form a clean column. */
+element-text {
+    font:             "JetBrainsMono Nerd Font 13";
+    horizontal-align: 0.0;
+    vertical-align:   0.5;
+    text-color:       @fg;
+    background-color: transparent;
+    cursor:           inherit;
+}
+
+element selected.normal {
+    background-color: @bg-selected;
+    border:           1px;
+    border-color:     @accent;
+}
+
+element selected.normal element-text {
+    text-color: #ffffff;
+}

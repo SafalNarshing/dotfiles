@@ -1,0 +1,120 @@
+/* swaync — dark glass, matched to waybar / rofi / kitty.
+ *
+ * swaync 0.12 themes through :root custom properties (see
+ * /etc/xdg/swaync/style.css). Overriding those is the supported route —
+ * writing short selectors like `.notification { background: ... }` does NOT
+ * work, because the shipped sheet uses long chains such as
+ * `.notification-row .notification-background .notification` that win on
+ * specificity and silently keep the default grey.
+ */
+
+:root {
+    /* --noti-bg is a bare "r, g, b" triplet, not a colour function; the
+       shipped sheet feeds it into rgba() together with --noti-bg-alpha. */
+    --noti-bg: 30, 27, 40;
+    --noti-bg-alpha: 0.88;
+    --noti-bg-darker: rgb(22, 20, 29);
+    --noti-bg-hover: rgba(120, 106, 156, 0.42);
+    --noti-bg-focus: rgba(120, 106, 156, 0.30);
+    --noti-border-color: rgba(203, 166, 247, 0.26);
+
+    --noti-close-bg: rgba(203, 166, 247, 0.16);
+    --noti-close-bg-hover: rgba(224, 140, 154, 0.55);
+
+    --cc-bg: rgba(24, 21, 33, 0.90);
+
+    --text-color: #dfe3ec;
+    --text-color-disabled: #8b90a0;
+    --bg-selected: #cba6f7;
+
+    --border-radius: 13px;
+    --notification-icon-size: 44px;
+    --font-size-summary: 14px;
+    --font-size-body: 13px;
+}
+
+* {
+    font-family: "JetBrainsMono Nerd Font", "Cantarell", sans-serif;
+}
+
+/* ------------------------------------------------------ popup toasts only
+ *
+ * These rules apply ONLY to the floating popups, not to the same cards as
+ * they appear inside the control centre — which stays roomy. The intent is
+ * dunst's restraint: a small, quiet card that does not command the screen.
+ *
+ * Every rule needs the full selector chain. The shipped sheet styles these
+ * via `.notification-row .notification-background .notification`, so anything
+ * shorter loses on specificity and silently does nothing.
+ *
+ * Hyprland already drops this layer below waybar's exclusive zone (the layer
+ * origin sits at y=41), so only a small breathing gap is needed — not an
+ * offset for the bar's height.
+ */
+/* Gap is on the right now that popups are anchored top-right. */
+.floating-notifications.background .notification-row {
+    margin: 6px 6px 0px 0px;
+}
+
+.floating-notifications.background .notification-row .notification-background {
+    padding: 3px 6px;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification {
+    border-radius: 9px;
+    /* Flatter than the default drop shadow — less visual weight. */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.38);
+}
+
+.floating-notifications.background .notification-row .notification-background .notification
+    .notification-default-action .notification-content {
+    padding: 3px 4px;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification
+    .notification-default-action .notification-content .summary {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification
+    .notification-default-action .notification-content .body {
+    font-size: 11px;
+    opacity: 0.88;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification
+    .notification-default-action .notification-content .time {
+    font-size: 10px;
+}
+
+/* Keep the close button from inflating the card height. */
+.floating-notifications.background .notification-row .notification-background .close-button {
+    margin: 2px;
+    padding: 0px 4px;
+    min-width: 18px;
+    min-height: 18px;
+}
+
+/* Critical notifications keep a red rim rather than the violet one. */
+.notification-row .notification-background .notification.critical {
+    border: 1px solid #e08c9a;
+}
+
+.control-center {
+    border-radius: 16px;
+    margin: 6px;
+}
+
+.control-center-list-placeholder {
+    opacity: 0.55;
+}
+
+.widget-title > button {
+    border-radius: 9px;
+}
+
+.widget-title > button:hover {
+    background: #cba6f7;
+    color: #14131a;
+}

@@ -1,0 +1,12 @@
+# Backups created by install.sh
+*.bak
+
+# Runtime / state files that should not be versioned
+.config/hypr/hyprmoncfg-state*
+*.log
+
+# Keep secrets out. .bashrc is tracked, so never put tokens in it —
+# put them in ~/.bashrc.local and source that instead.
+.bashrc.local
+*.token
+*.secret
