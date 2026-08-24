@@ -438,6 +438,9 @@ hl.exec_cmd("waybar")
 -- Second waybar instance: the bottom-centre splash quote. Separate config and
 -- stylesheet so it cannot disturb the main bar; layer "bottom" keeps it behind
 -- windows and reserving no space.
+-- Pushes waybar a signal the instant the workspace changes, so the dots keep
+-- up with the switch instead of lagging behind a poll interval.
+hl.exec_cmd("$HOME/.config/hypr/scripts/ws-watch.sh")
 hl.exec_cmd("waybar -c $HOME/.config/waybar/quotes-config.jsonc -s $HOME/.config/waybar/quotes-style.css")
 hl.exec_cmd("hyprpaper")
 -- Notification daemon. swaync is preferred because it provides a control

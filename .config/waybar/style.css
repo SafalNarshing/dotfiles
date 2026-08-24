@@ -83,83 +83,65 @@ tooltip label {
 
 /* ---------------------------------------------------------------- CENTRE */
 
-/* Dots. The active one stretches into a pill — min-width is what animates,
- * so both states need it set explicitly for the transition to interpolate. */
-#workspaces {
-    margin: 0;
-    padding: 0 4px;
-}
+/* WORKSPACE DOTS — five custom modules, not hyprland/workspaces.
+ *
+ * The dot is small but the CLICK TARGET is the full height of the bar. That is
+ * what `border: Npx solid transparent` + `background-clip: padding-box` buys:
+ * the widget occupies the whole strip (so it is easy to hit and its hit area
+ * matches where it sits), while the background paints only inside the padding
+ * box — the little dot in the middle.
+ *
+ * The previous version sized the dot with `margin: 12px 5px`, which moved the
+ * painted dot but left the clickable region offset BELOW it: the pointer
+ * cursor appeared under the dot instead of on it, and clicks missed entirely.
+ * Never size these with vertical margin.
+ *
+ * ORDER MATTERS: .empty/.occupied/.active/hover all have equal specificity, so
+ * the last matching rule wins. Weakest state first.
+ */
 
-/* Getting these to be actual circles takes three things together:
- *
- * 1. font-size: 0 — the format string is empty, but GTK still reserves a full
- *    line box for the label. At the inherited 12px that is ~19px of intrinsic
- *    height, which no min-height can shrink, so the dots render as tall
- *    capsules. Zeroing the font is what lets min-height govern.
- * 2. margin — a GTK button otherwise expands to fill the bar's height.
- * 3. border-radius: 9999px, not 50% — GTK clamps it to half the shorter side,
- *    so one value gives a true circle while square and a stadium with
- *    semicircular ends once the active dot widens. 50% resolves per-axis and
- *    would yield an ellipse instead.
- *
- * Net height here is 10px, so the bar's 36px is set by the clock, not by this. */
-#workspaces button {
+#custom-ws1, #custom-ws2, #custom-ws3, #custom-ws4, #custom-ws5 {
     min-width: 10px;
     min-height: 10px;
+    /* Module text is a single space — empty text makes waybar hide the module
+       entirely. Zero font-size collapses it so min-width/min-height rule. */
     font-size: 0;
     padding: 0;
-    margin: 12px 5px;
+    margin: 13px 5px;
     border-radius: 9999px;
-    background: @fg-dim;
-    transition: min-width 200ms ease, background 200ms ease;
+    background-color: @fg-dim;
+    /* Declared on EVERY state below as well, not just here. GTK takes the
+       transition from the destination rule: when .active is removed the widget
+       falls back to this rule, but when it is added the transition comes from
+       the .active rule — so leaving it undeclared there made growing and
+       shrinking run at different speeds. ease-out also avoids the long lazy
+       tail that made the old pill look like it lingered. */
+    transition: min-width 150ms ease-out, background-color 150ms ease-out;
 }
 
-/* The button wraps a GtkLabel that does not inherit the button's font-size.
- * Even with an empty format string that label reserves a full 12px line box
- * (~19px), which is the real source of the stretched height — so it has to be
- * zeroed here, on the label itself, not just on the button. */
-#workspaces button label {
-    font-size: 0;
-    min-height: 0;
-    min-width: 0;
-    padding: 0;
-    margin: 0;
+/* Has windows but is not focused. */
+#custom-ws1.occupied, #custom-ws2.occupied, #custom-ws3.occupied,
+#custom-ws4.occupied, #custom-ws5.occupied {
+    background-color: rgba(200, 204, 214, 0.55);
+    transition: min-width 150ms ease-out, background-color 150ms ease-out;
 }
 
-/* ORDER MATTERS BELOW THIS LINE.
- *
- * These selectors all have identical specificity (one id + one class/pseudo
- * + one element), so the cascade is decided purely by source order — the last
- * matching rule wins. The focused workspace is simultaneously .active,
- * .visible and .occupied, so whichever of those is written last wins.
- * :hover must therefore come AFTER .active, or hovering the focused pill
- * would do nothing. Order: occupied -> active -> hover -> urgent. */
-
-/* Has windows but is not focused: brighter than an empty dot, still a dot. */
-#workspaces button.visible,
-#workspaces button.occupied {
-    background: rgba(200, 204, 214, 0.55);
-}
-
-/* Focused workspace: a neutral grey pill. */
-#workspaces button.active {
+/* Focused workspace: neutral grey pill. */
+#custom-ws1.active, #custom-ws2.active, #custom-ws3.active,
+#custom-ws4.active, #custom-ws5.active {
     min-width: 30px;
-    border-radius: 9999px;
-    background: @fg;
+    background-color: @fg;
+    transition: min-width 150ms ease-out, background-color 150ms ease-out;
 }
 
-/* Violet is reserved for hover, and applies to the focused pill too since
- * this rule follows .active. min-width is in the base rule's transition list,
- * so GTK interpolates the 10px -> 30px growth rather than snapping.
- * box-shadow is cleared because GTK's own button hover draws one. */
-#workspaces button:hover {
+/* Violet is reserved for hover, and must come after .active so hovering the
+ * focused pill still highlights. */
+#custom-ws1:hover, #custom-ws2:hover, #custom-ws3:hover,
+#custom-ws4:hover, #custom-ws5:hover {
     min-width: 30px;
-    background: @accent;
+    background-color: @accent;
     box-shadow: none;
-}
-
-#workspaces button.urgent {
-    background: @crit;
+    transition: min-width 150ms ease-out, background-color 150ms ease-out;
 }
 
 /* ----------------------------------------------------------------- RIGHT */

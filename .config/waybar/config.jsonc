@@ -20,7 +20,7 @@
     ],
 
     "modules-center": [
-        "hyprland/workspaces"
+        "custom/ws1", "custom/ws2", "custom/ws3", "custom/ws4", "custom/ws5"
     ],
 
     "modules-right": [
@@ -59,16 +59,58 @@
     // as soon as it is both empty and unfocused. Switching away from an empty
     // workspace deletes it, so a purely dynamic bar can never show a second dot
     // until each workspace is actually holding a window.
-    "hyprland/workspaces": {
-        "format": "",
-        "on-click": "activate",
-        "on-scroll-up": "hyprctl dispatch workspace e+1",
-        "on-scroll-down": "hyprctl dispatch workspace e-1",
-        "all-outputs": true,
-        "sort-by-number": true,
-        "persistent-workspaces": {
-            "*": 5
-        }
+
+    // ONE MODULE PER WORKSPACE, deliberately.
+    //
+    // hyprland/workspaces cannot work on a Lua Hyprland config: its click
+    // handler sends the legacy IPC string "dispatch workspace <n>", which Lua
+    // evaluates and rejects with a syntax error. Waybar does not substitute
+    // {name} into on-click either, so the built-in module cannot be redirected.
+    //
+    // These modules also fix a second bug: the old buttons carried a 12px
+    // vertical margin, which left their clickable region offset BELOW the
+    // painted dot — the cursor turned into a pointer under the dot rather than
+    // on it. Here the dot size comes from padding in style.css instead, so the
+    // hit area and the paint area are the same box.
+    "custom/ws1": {
+        "exec": "$HOME/.config/waybar/scripts/ws.sh 1",
+        "return-type": "json",
+        "interval": 10,
+        "signal": 1,
+        "format": "{}",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({ workspace = 1 })'"
+    },
+    "custom/ws2": {
+        "exec": "$HOME/.config/waybar/scripts/ws.sh 2",
+        "return-type": "json",
+        "interval": 10,
+        "signal": 1,
+        "format": "{}",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({ workspace = 2 })'"
+    },
+    "custom/ws3": {
+        "exec": "$HOME/.config/waybar/scripts/ws.sh 3",
+        "return-type": "json",
+        "interval": 10,
+        "signal": 1,
+        "format": "{}",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({ workspace = 3 })'"
+    },
+    "custom/ws4": {
+        "exec": "$HOME/.config/waybar/scripts/ws.sh 4",
+        "return-type": "json",
+        "interval": 10,
+        "signal": 1,
+        "format": "{}",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({ workspace = 4 })'"
+    },
+    "custom/ws5": {
+        "exec": "$HOME/.config/waybar/scripts/ws.sh 5",
+        "return-type": "json",
+        "interval": 10,
+        "signal": 1,
+        "format": "{}",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({ workspace = 5 })'"
     },
 
     // --------------------------------------------------- RIGHT: GPU / CPU
@@ -79,7 +121,10 @@
         "exec": "$HOME/.config/waybar/scripts/gpu.sh",
         "return-type": "json",
         "format": "󰢮 {}",
-        "interval": 5
+        "interval": 5,
+        // nvtop shows per-process GPU usage, which btop does not. It is not
+        // installed by default, so fall back to a live nvidia-smi.
+        "on-click": "sh -c 'command -v nvtop >/dev/null && exec kitty -e nvtop || exec kitty -e watch -n 1 nvidia-smi'"
     },
 
     "custom/cpu": {
