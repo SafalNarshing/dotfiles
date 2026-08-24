@@ -1,0 +1,56 @@
+# Desktop splash quotes — one per line. Blank lines and #comments are ignored.
+# Rendered bottom-centre by the quote bar (waybar/quotes-config.jsonc).
+# Edit freely; a new line is picked each session.
+
+# ── coding ──────────────────────────────────────────────────────────────
+It compiled. Ship it.
+Works on my machine, and this is that machine.
+git commit -m "fix"
+It's not a bug, it's an undocumented feature.
+I'll refactor it later. — you, lying
+99 little bugs in the code…
+Tabs. This is not a debate.
+Your regex works. Nobody knows why.
+rm -rf doubt
+Have you tried turning the config off and on again?
+Blame the compiler. It can't defend itself.
+TODO: write a better splash message
+Semicolons: optional, until they aren't.
+One more keybind and the rice is finished. (it is never finished)
+Everything is fine. The logs disagree.
+
+# ── ai ──────────────────────────────────────────────────────────────────
+This splash message was not written by an AI. Probably.
+As a large language model, I admire your rice.
+I asked the AI to fix my config. Now I have two configs.
+Prompt engineering: begging, with extra steps.
+Trained on 40 billion dotfiles, still can't center a div.
+Hallucinating your wallpaper…
+AGI arrives right after your build finishes.
+The model is confident. That's the worrying part.
+I let the AI pick my colorscheme. Send help.
+Autocomplete wrote this. Autocomplete wrote everything.
+Ask the AI, then check what it said.
+Your config has 400 lines of comments. You're welcome. — the AI
+It works, and neither of us knows why.
+Tokens spent: yes.
+
+# ── Hyprland's own splash lines, lifted from the binary ─────────────────
+It's not awesome, it's Hyprland!
+My name is Land. Hypr Land. One red bull, shaken not stirred.
+Hyprland will overtake Gnome in popularity by [insert year]
+"I commit too often, people can't catch up lmao" - Vaxry
+"There are reasons to not use rust." - Boga
+Compile, wait for 20 minutes, notice a new commit, compile again.
+To rice, or not to rice, that is the question.
+"Hyprland is so good it starts with a capital letter" - Hazel
+"please make this message a splash" - eriedaberrie
+"the only wayland compositor powered by fried chicken" - raf
+"This will never get into Hyprland" - Flafy
+"Hyprland only gives you up on -git" - fazzi
+"disabling hyprland logo is a war crime" - vaxry
+"I think I am addicted to hyprland" - mathisbuilder
+"hyprland is the most important package in the arch repos" - jacekpoz
+Segmentation fault (core dumped)
+[New year] will be the year of the Linux desktop!
+You can't use --splash to change this message :)

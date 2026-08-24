@@ -1,0 +1,29 @@
+/* Splash quote bar — no chrome at all, just text on the wallpaper. */
+
+* {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+}
+
+window#waybar {
+    background: transparent;
+}
+
+/* No pill, no panel — the wrapper must stay fully clear or the quote sits on
+   a visible strip across the bottom of the screen. */
+window#waybar > box {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+#custom-quote {
+    background: transparent;
+    color: rgba(232, 236, 245, 0.72);
+    font-size: 15px;
+    font-style: italic;
+    letter-spacing: 0.4px;
+    padding: 0 12px;
+}

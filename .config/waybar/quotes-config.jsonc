@@ -1,0 +1,29 @@
+// Second waybar instance: the splash quote, bottom-centre.
+//
+// Run separately from the main bar:
+//   waybar -c ~/.config/waybar/quotes-config.jsonc -s ~/.config/waybar/quotes-style.css
+//
+// layer "bottom" + exclusive false is what makes this behave like a splash
+// rather than a bar: it sits behind windows and reserves no screen space, so
+// it is only visible on an empty desktop and never shifts your tiling.
+{
+    "layer": "bottom",
+    "position": "bottom",
+    "exclusive": false,
+    "passthrough": true,
+    "height": 30,
+    "margin-bottom": 25,
+    "spacing": 0,
+
+    "modules-left": [],
+    "modules-center": ["custom/quote"],
+    "modules-right": [],
+
+    "custom/quote": {
+        // "once" mirrors Hyprland's behaviour — one quote per session rather
+        // than a line that keeps changing while you look at it.
+        "interval": "once",
+        "exec": "$HOME/.config/waybar/scripts/quote.sh",
+        "tooltip": false
+    }
+}

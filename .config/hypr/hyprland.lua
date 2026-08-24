@@ -291,7 +291,8 @@ hl.bind(mainMod .. " + SHIFT + E", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/f
 hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd(
     "sh -c 'command -v hyprmoncfg >/dev/null 2>&1 && exec kitty -e hyprmoncfg || " ..
     "notify-send \"hyprmoncfg not installed\" \"Install it with: yay -S hyprmoncfg\"'"))
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
+-- Moved off SUPER+V, which now opens clipboard history (Windows-like).
+hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
@@ -434,6 +435,10 @@ hl.env("ELECTRON_OZONE_PLATFORM_HINT","auto")
 -- AUTOSTART
 hl.on("hyprland.start", function()
 hl.exec_cmd("waybar")
+-- Second waybar instance: the bottom-centre splash quote. Separate config and
+-- stylesheet so it cannot disturb the main bar; layer "bottom" keeps it behind
+-- windows and reserving no space.
+hl.exec_cmd("waybar -c $HOME/.config/waybar/quotes-config.jsonc -s $HOME/.config/waybar/quotes-style.css")
 hl.exec_cmd("hyprpaper")
 -- Notification daemon. swaync is preferred because it provides a control
 -- centre (the panel the clock opens); dunst has no such panel. Falls back to
@@ -538,6 +543,4 @@ hl.bind(mainMod .. " + ESCAPE", hl.dsp.exec_cmd("$HOME/.config/rofi/powermenu.sh
 
 -- Clipboard history. The cliphist daemon has been collecting all along; this
 -- is the missing viewer. SUPER+V is already taken by float-toggle, hence SHIFT.
-hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd(
-    "sh -c 'cliphist list | rofi -dmenu -p Clipboard -theme " ..
-    "$HOME/.config/rofi/launcher.rasi | cliphist decode | wl-copy'"))
+hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("$HOME/.config/rofi/clipboard.sh"))

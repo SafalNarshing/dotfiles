@@ -1,0 +1,113 @@
+/* Clipboard history — same glass palette as the launcher, but with icons
+ * enabled so image entries show real thumbnails.
+ *
+ * Note this cannot reuse launcher.rasi: that theme sets element-icon size to 0
+ * to reclaim the space when icons are off, which would hide every thumbnail.
+ */
+
+* {
+    bg:          rgba(24, 21, 33, 74%);
+    bg-selected: rgba(203, 166, 247, 22%);
+    bg-input:    rgba(120, 106, 156, 18%);
+    fg:          #dfe3ec;
+    fg-dim:      #8b90a0;
+    accent:      #cba6f7;
+    border-col:  rgba(203, 166, 247, 28%);
+
+    font:             "JetBrainsMono Nerd Font 11";
+    background-color: transparent;
+    text-color:       @fg;
+    margin:           0;
+    padding:          0;
+    spacing:          0;
+}
+
+window {
+    transparency:     "real";
+    location:         center;
+    anchor:           center;
+    width:            720px;
+    border:           1px;
+    border-color:     @border-col;
+    border-radius:    16px;
+    background-color: @bg;
+    padding:          18px;
+    children:         [ mainbox ];
+}
+
+mainbox {
+    spacing:  14px;
+    children: [ inputbar, message, listview ];
+}
+
+inputbar {
+    background-color: @bg-input;
+    border-radius:    11px;
+    padding:          10px 14px;
+    spacing:          10px;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    text-color:     @accent;
+    vertical-align: 0.5;
+}
+
+entry {
+    placeholder:       "Search clipboard…";
+    placeholder-color: @fg-dim;
+    vertical-align:    0.5;
+    cursor:            text;
+}
+
+listview {
+    columns:      1;
+    lines:        9;
+    fixed-height: false;
+    cycle:        true;
+    dynamic:      true;
+    scrollbar:    false;
+    spacing:      4px;
+}
+
+element {
+    padding:       7px 10px;
+    spacing:       12px;
+    border-radius: 9px;
+    cursor:        pointer;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+element selected.normal {
+    background-color: @bg-selected;
+    text-color:       #ffffff;
+}
+
+/* Thumbnails for image entries. Text rows simply have no icon and the slot
+   collapses, so this does not indent them. */
+element-icon {
+    size:           34px;
+    vertical-align: 0.5;
+    cursor:         inherit;
+}
+
+element-text {
+    vertical-align: 0.5;
+    cursor:         inherit;
+    text-color:     inherit;
+}
+
+message {
+    background-color: @bg-input;
+    border-radius:    10px;
+    padding:          8px 12px;
+}
+
+textbox {
+    text-color: @fg-dim;
+}
