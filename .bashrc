@@ -10,6 +10,31 @@ alias grep='grep --color=auto'
 PS1='[\u@\h \W]\$ '
 export PATH="$HOME/.local/bin:$PATH"
 
+# ── completion and history ───────────────────────────────────────────────
+# Programmable completion for arguments: git branches, pacman packages,
+# systemctl units and so on. Guarded because the package is optional —
+# install with:  sudo pacman -S bash-completion
+if [ -r /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+fi
+
+# Bigger history, shared across terminals, no duplicates or leading-space
+# commands. histappend matters: without it the last shell to exit overwrites
+# everything the others recorded.
+HISTSIZE=50000
+HISTFILESIZE=100000
+HISTCONTROL=ignoreboth:erasedups
+HISTIGNORE="ls:ll:cd:pwd:exit:clear:history"
+HISTTIMEFORMAT="%F %T  "
+shopt -s histappend cmdhist
+
+# Typo tolerance and quality-of-life.
+shopt -s autocd        # "Projects" alone cds into it
+shopt -s cdspell       # fixes minor typos in cd targets
+shopt -s dirspell      # and in directory names during completion
+shopt -s globstar      # ** matches across directories
+shopt -s checkwinsize
+
 # yazi wrapper: `y` leaves the shell in whatever directory you browsed to.
 # Plain `yazi` always returns you to where you started.
 y() {

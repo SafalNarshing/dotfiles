@@ -17,6 +17,8 @@ PATHS=(
     .config/xdg-desktop-portal
     .config/brave-flags.conf
     .bashrc
+    .inputrc
+    .local/bin/weather
     Pictures/Wallpapers
 )
 

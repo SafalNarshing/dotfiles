@@ -81,6 +81,27 @@ tooltip label {
     box-shadow: none;
 }
 
+/* Privacy indicators — only rendered while the device is actually in use.
+ * Violet for the microphone, green for the camera, so a glance tells you which
+ * without reading the glyph. */
+#custom-mic,
+#custom-cam {
+    font-size: 13px;
+    padding: 0 9px;
+    margin: 4px 2px;
+    border-radius: 8px;
+}
+
+#custom-mic {
+    background: rgba(203, 166, 247, 0.22);
+    color: @accent;
+}
+
+#custom-cam {
+    background: rgba(140, 224, 160, 0.22);
+    color: #8ce0a0;
+}
+
 /* ---------------------------------------------------------------- CENTRE */
 
 /* WORKSPACE DOTS — five custom modules, not hyprland/workspaces.

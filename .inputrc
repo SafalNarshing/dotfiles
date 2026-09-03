@@ -1,0 +1,47 @@
+# Readline behaviour for bash. Applies to anything using readline (bash, python
+# REPL, psql...), not just the shell.
+
+$include /etc/inputrc
+
+# ── history search on the arrow keys ─────────────────────────────────────
+# Type a prefix, press Up, and cycle only through commands that START with it.
+# This is the single biggest recall win and needs no packages at all — plain
+# Up/Down walks the whole history regardless of what you have typed.
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+# ── completion ───────────────────────────────────────────────────────────
+# One Tab shows the candidates instead of requiring a second press.
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+
+# Match regardless of case, and treat - and _ as interchangeable, so
+# "list_dir" completes from "list-dir".
+set completion-ignore-case on
+set completion-map-case on
+
+# Append a marker so directories, symlinks and executables are distinguishable
+# in the completion list.
+set visible-stats on
+set colored-stats on
+
+# Highlight the part already typed in the candidate list.
+set colored-completion-prefix on
+
+# Don't page a long list until it is genuinely long.
+set completion-query-items 60
+set page-completions off
+
+# Show the common prefix of candidates before listing them.
+set menu-complete-display-prefix on
+
+# Ctrl-Space cycles through candidates in place, fish-style.
+"\C-@": menu-complete
+"\e[Z": menu-complete-backward
+
+# ── editing ──────────────────────────────────────────────────────────────
+set bell-style none
+set expand-tilde off
+set mark-symlinked-directories on
+set skip-completed-text on
+set enable-bracketed-paste on

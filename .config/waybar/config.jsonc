@@ -16,6 +16,8 @@
 
     "modules-left": [
         "custom/apps",
+        "custom/mic",
+        "custom/cam",
         "wlr/taskbar"
     ],
 
@@ -38,6 +40,24 @@
     ],
 
     // ---------------------------------------------------------------- LEFT
+
+    // Privacy indicators. Both emit empty text when idle, and waybar hides a
+    // custom module with empty text — so they appear only while the device is
+    // genuinely in use rather than sitting greyed out.
+    "custom/mic": {
+        "exec": "$HOME/.config/waybar/scripts/privacy.sh mic",
+        "return-type": "json",
+        "interval": 2,
+        "format": "{}",
+        "on-click": "pavucontrol -t 4"
+    },
+
+    "custom/cam": {
+        "exec": "$HOME/.config/waybar/scripts/privacy.sh cam",
+        "return-type": "json",
+        "interval": 2,
+        "format": "{}"
+    },
 
     "wlr/taskbar": {
         "format": "{icon}",
