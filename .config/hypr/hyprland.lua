@@ -467,6 +467,10 @@ hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO
 
 -- Screenshot
 hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("grim -g \"$(slurp)\" - | wl-copy"))
+
+-- Snip a region and copy the TEXT it contains, via tesseract. Sibling of the
+-- screenshot bind above, which copies the image instead.
+hl.bind("SUPER + SHIFT + T", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/ocr.sh"))
 -- Brightness via wl-gammarelay-rs.
 -- Routed through a wrapper because the raw UpdateBrightness call does not clamp:
 -- holding the key drives the value past 1.0 or below 0.0 and blacks out the panel.
