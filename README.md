@@ -79,7 +79,7 @@ it is safe to re-run.
 | Keys | Action |
 | --- | --- |
 | `SUPER` `←` `→` `↑` `↓` | Focus by direction |
-| `SUPER` `V` | Toggle floating |
+| `SUPER` `SHIFT` `F` | Toggle floating |
 | `SUPER` `P` | Pseudo-tile |
 | `SUPER` `J` | Toggle split direction |
 | `SUPER` + drag LMB / RMB | Move / resize |
@@ -98,7 +98,8 @@ it is safe to re-run.
 | Keys | Action |
 | --- | --- |
 | `SUPER` `SHIFT` `S` | Region screenshot → clipboard |
-| `SUPER` `SHIFT` `V` | Clipboard history |
+| `SUPER` `SHIFT` `T` | Region OCR → text to clipboard |
+| `SUPER` `V` | Clipboard history (text + image thumbnails) |
 
 ### Media
 
@@ -134,6 +135,7 @@ it is safe to re-run.
 | `grim` + `slurp` | Screenshot capture and region selection |
 | `wl-clipboard` | `wl-copy` / `wl-paste` |
 | `cliphist` | Clipboard history store |
+| `tesseract` + `-data-eng` `-data-nep` | OCR for the snip-to-text bind |
 | `wl-gammarelay-rs` | Brightness via gamma ramps — the panel is OLED |
 | `playerctl` | Media key handling |
 | `pavucontrol` | Audio mixer |
