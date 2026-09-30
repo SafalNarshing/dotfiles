@@ -228,6 +228,14 @@ hl.config({
     misc = {
         force_default_wallpaper = -1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
         disable_hyprland_logo   = false, -- If true disables the random hyprland logo / anime girl background. :(
+
+        -- Any key or mouse movement wakes a DPMS-off display. Both default to
+        -- false, which is what caused a black screen after an AUTOMATIC
+        -- suspend: hypridle turns the panel off at 6 min, the system later
+        -- suspends with it still off, and on wake nothing but hypridle's own
+        -- after_sleep_cmd could turn it back on — and that fires too early.
+        key_press_enables_dpms  = true,
+        mouse_move_enables_dpms = true,
     },
 })
 
@@ -449,6 +457,9 @@ hl.exec_cmd("hyprpaper")
 -- own the org.freedesktop.Notifications name, hence the either/or.
 hl.exec_cmd("sh -c 'command -v swaync >/dev/null 2>&1 && exec swaync || exec dunst'")
 hl.exec_cmd("wl-gammarelay-rs")
+-- Brightness is an in-memory gamma level, so it resets every login unless
+-- re-applied. brightness.sh saves each change; this puts it back.
+hl.exec_cmd("$HOME/.config/hypr/scripts/brightness-restore.sh")
 hl.exec_cmd("wl-paste --watch cliphist store")
 hl.exec_cmd("hypridle")
 -- nm-applet deliberately NOT started: its tray icon duplicates waybar's own

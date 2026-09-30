@@ -8,12 +8,21 @@ SVC="rs.wl-gammarelay"
 IFACE="rs.wl.gammarelay"
 STEP=0.05
 
+# Persisted across logins. wl-gammarelay-rs keeps the gamma level only in
+# memory, so every session would otherwise start at 1.0. Written on every
+# user-driven change; restored at login by brightness-restore.sh.
+# Idle dimming (hypr/scripts/idle-dim.sh) sets the level directly and never
+# touches this file, so a dimmed screen is never what gets saved.
+STATE_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/brightness"
+
 get_raw() {
     busctl --user get-property "$SVC" / "$IFACE" Brightness 2>/dev/null | awk '{print $2}'
 }
 
 set_abs() {
-    busctl --user set-property "$SVC" / "$IFACE" Brightness d "$1" >/dev/null 2>&1
+    busctl --user set-property "$SVC" / "$IFACE" Brightness d "$1" >/dev/null 2>&1 || return
+    mkdir -p "$(dirname "$STATE_FILE")"
+    printf '%s\n' "$1" > "$STATE_FILE"
 }
 
 case "$1" in
