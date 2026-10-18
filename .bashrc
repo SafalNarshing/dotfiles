@@ -56,3 +56,7 @@ y() {
 if [[ $SHLVL -eq 1 && -t 1 && -z "$INSIDE_EMACS" && -z "$VIMRUNTIME" ]]; then
     command -v fastfetch >/dev/null 2>&1 && fastfetch
 fi
+export PATH=/opt/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/opt/cuda/lib64:${LD_LIBRARY_PATH:-}
+export PATH=/opt/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/opt/cuda/lib64:${LD_LIBRARY_PATH:-}
