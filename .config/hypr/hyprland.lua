@@ -409,7 +409,7 @@ hl.window_rule({
 -- visible rectangle.
 hl.layer_rule({
     name  = "blur-waybar",
-    match = { namespace = "^waybar$" },
+    match = { namespace = "^waybar(-brightness)?$" },
     blur = true,
     ignore_alpha = 0.2,
 })

@@ -168,9 +168,11 @@
         "format": "{icon}",
         "format-icons": ["󰃞", "󰃟", "󰃠"],
         "interval": 2,
+        "signal": 2,
         "on-scroll-up": "$HOME/.config/waybar/scripts/brightness.sh up",
         "on-scroll-down": "$HOME/.config/waybar/scripts/brightness.sh down",
-        "on-click": "$HOME/.config/waybar/scripts/brightness.sh reset"
+        "on-click": "$HOME/.config/waybar/scripts/brightness-popup.py",
+        "on-click-right": "$HOME/.config/waybar/scripts/brightness.sh reset"
     },
 
     "pulseaudio": {

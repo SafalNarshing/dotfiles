@@ -23,6 +23,8 @@ set_abs() {
     busctl --user set-property "$SVC" / "$IFACE" Brightness d "$1" >/dev/null 2>&1 || return
     mkdir -p "$(dirname "$STATE_FILE")"
     printf '%s\n' "$1" > "$STATE_FILE"
+    # Refresh the bar icon now instead of waiting for the next poll.
+    pkill -RTMIN+2 -x waybar 2>/dev/null
 }
 
 case "$1" in
@@ -38,6 +40,14 @@ case "$1" in
                      printf "%.2f", v }')
         set_abs "$new"
         ;;
+    set)
+        # Absolute level from the slider popup, clamped like up/down.
+        new=$(awk -v v="$2" 'BEGIN { v += 0;
+                     if (v > 1.0) v = 1.0;
+                     if (v < 0.1) v = 0.1;
+                     printf "%.2f", v }')
+        set_abs "$new"
+        ;;
     reset)
         set_abs 1.0
         ;;
@@ -49,6 +59,6 @@ case "$1" in
             exit 0
         fi
         pct=$(awk -v c="$cur" 'BEGIN { printf "%d", c * 100 }')
-        echo "{\"text\":\"${pct}%\",\"percentage\":${pct},\"tooltip\":\"Brightness ${pct}% (gamma)\\nScroll to adjust\"}"
+        echo "{\"text\":\"${pct}%\",\"percentage\":${pct},\"tooltip\":\"Brightness ${pct}% (gamma)\\nClick for slider · scroll to adjust · right-click to reset\"}"
         ;;
 esac
