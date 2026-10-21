@@ -351,8 +351,8 @@ hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 -- Laptop multimedia keys for volume and LCD brightness
 -- Routed through osd.sh, which makes the change and then flashes the
--- bottom-centre on-screen display (osd.py) so the level is visible even in
--- fullscreen, where the bar is hidden. Volume is capped at 100%.
+-- bottom-centre on-screen display (osd.py), but only over a fullscreen window,
+-- where the bar is hidden. Volume is capped at 100%.
 local osd = "$HOME/.config/hypr/scripts/osd.sh"
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(osd .. " volume up"),   { locked = true, repeating = true })
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(osd .. " volume down"), { locked = true, repeating = true })

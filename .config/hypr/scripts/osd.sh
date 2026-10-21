@@ -14,6 +14,11 @@ case "$1 $2" in
     *) echo "usage: osd.sh volume up|down|mute | brightness up|down" >&2; exit 1 ;;
 esac
 
+# Only flash the OSD over a true fullscreen window (mode 2, or 3 = both), where
+# the bar is hidden; otherwise the bar already shows the level. Maximised
+# (mode 1) keeps the bar visible, so it does not count.
+hyprctl activewindow -j | grep -Eq '"fullscreen": [23]' || exit 0
+
 sig=USR1; [ "$1" = brightness ] && sig=USR2
 pid=$(cat "$PIDFILE" 2>/dev/null)
 # Only signal the pid if it really is the OSD (guards against a stale pidfile).
