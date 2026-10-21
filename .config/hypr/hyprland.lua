@@ -350,9 +350,13 @@ hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 -- Laptop multimedia keys for volume and LCD brightness
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true })
-hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true, repeating = true })
+-- Routed through osd.sh, which makes the change and then flashes the
+-- bottom-centre on-screen display (osd.py) so the level is visible even in
+-- fullscreen, where the bar is hidden. Volume is capped at 100%.
+local osd = "$HOME/.config/hypr/scripts/osd.sh"
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(osd .. " volume up"),   { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(osd .. " volume down"), { locked = true, repeating = true })
+hl.bind("XF86AudioMute",        hl.dsp.exec_cmd(osd .. " volume mute"), { locked = true })
 hl.bind("XF86AudioMicMute",     hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),   { locked = true, repeating = true })
 
 -- Requires playerctl
@@ -409,7 +413,7 @@ hl.window_rule({
 -- visible rectangle.
 hl.layer_rule({
     name  = "blur-waybar",
-    match = { namespace = "^waybar(-brightness)?$" },
+    match = { namespace = "^(waybar(-brightness)?|osd)$" },
     blur = true,
     ignore_alpha = 0.2,
 })
@@ -462,6 +466,8 @@ hl.exec_cmd("wl-gammarelay-rs")
 hl.exec_cmd("$HOME/.config/hypr/scripts/brightness-restore.sh")
 hl.exec_cmd("wl-paste --watch cliphist store")
 hl.exec_cmd("hypridle")
+-- Volume/brightness on-screen display; osd.sh also starts it if it is missing.
+hl.exec_cmd("$HOME/.config/hypr/scripts/osd.py")
 -- nm-applet deliberately NOT started: its tray icon duplicates waybar's own
 -- network module, giving two wifi indicators. Waybar covers the status, and
 -- clicking it opens nm-connection-editor for the full connection UI.
@@ -470,11 +476,6 @@ hl.exec_cmd("hypridle")
 end)
 
 -- Brightnes
-
--- Volume
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"))
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"))
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"))
 
 -- Screenshot
 hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("grim -g \"$(slurp)\" - | wl-copy"))
@@ -485,10 +486,10 @@ hl.bind("SUPER + SHIFT + T", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/ocr.sh"
 -- Brightness via wl-gammarelay-rs.
 -- Routed through a wrapper because the raw UpdateBrightness call does not clamp:
 -- holding the key drives the value past 1.0 or below 0.0 and blacks out the panel.
--- The script clamps to 0.1-1.0 and keeps waybar's readout in sync.
-local brightness = "$HOME/.config/waybar/scripts/brightness.sh"
-hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd(brightness .. " up"),   { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(brightness .. " down"), { locked = true, repeating = true })
+-- The script clamps to 0.1-1.0 and keeps waybar's readout in sync; osd.sh
+-- calls it and then shows the on-screen display.
+hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd(osd .. " brightness up"),   { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(osd .. " brightness down"), { locked = true, repeating = true })
 
 
 hl.env("MOZ_ENABLE_WAYLAND", "1")
