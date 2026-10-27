@@ -15,6 +15,7 @@ PATHS=(
     .config/kitty
     .config/fastfetch
     .config/xdg-desktop-portal
+    .config/pipewire
     .config/brave-flags.conf
     .bashrc
     .inputrc
