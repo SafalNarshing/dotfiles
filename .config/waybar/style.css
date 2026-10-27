@@ -226,25 +226,16 @@ tooltip label {
     color: #14131a;
 }
 
-/* App launcher, far left. The one solid-white element on the bar — it is the
- * primary action, so it reads as a button rather than a status readout. */
+/* App launcher, far left: the Arch logo as an icon pill like the rest. */
 #custom-apps {
-    background: #ffffff;
-    color: #1a1722;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 0 16px;
-    /* Zero margin on the top, bottom and left seats it into the bar's corner;
-       the 12px right margin is the gap before the running-app icons. */
-    margin: 0 12px 0 0;
-    /* Left corners follow the bar's own 11px radius (less its 1px border) so
-       the white meets the edge cleanly; right corners stay capsule-round. */
-    border-radius: 10px 14px 14px 10px;
+    font-size: 15px;
+    padding: 0 21px 0 15px;  /* glyph sits right of its box; offset centres it */
+    margin: 4px 8px 4px 5px;
 }
 
 #custom-apps:hover {
-    background: @accent;
-    color: #14131a;
+    background: @bg-hover;
+    color: @accent;
 }
 
 /* -------------------------------------------------- state colours only */

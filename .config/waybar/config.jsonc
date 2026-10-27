@@ -267,7 +267,7 @@
     // release-bind in hyprland.lua, so clicking while rofi is open closes it
     // instead of stacking a second instance.
     "custom/apps": {
-        "format": "Apps",
+        "format": "",
         "tooltip": false,
         // -x matches the exact process name; a bare "pkill rofi" also hits
         // power-profiles-daemon ("p-rofi-les").
